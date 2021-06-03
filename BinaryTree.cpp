@@ -100,7 +100,7 @@ public:
     else
       cout << "NULL";
     cout << endl;
-    
+
     if (n->left != NULL)
       printSubTree(n->left);
     if (n->right != NULL)
@@ -152,11 +152,11 @@ public:
       }
     }
   }
-  
+
   void remove(int x) {
     if (root == NULL)
       return;
-    TreeNode* p = root, *parent = root;
+    TreeNode* p = root, * parent = root;
     char dir;
     while (p != NULL) {
       if (p->data == x) {
@@ -202,7 +202,7 @@ public:
           return;
         }
         else {
-          TreeNode* q = p->left, *qParent = p;
+          TreeNode* q = p->left, * qParent = p;
           char qDir = 'l';
           while (q->right != NULL)
           {
@@ -259,11 +259,84 @@ public:
       if (n->right != NULL)
         deleteSubTree(n->right);
     }
-    }
+  }
+
+  void postOrderTraverse(TreeNode* n) {
+    if (n == NULL)
+      return;
+    postOrderTraverse(n->left);
+    postOrderTraverse(n->right);
+    cout << n->data;
+  }
+  void inOrderTraverse(TreeNode* n) {
+    if (n == NULL)
+      return;
+    inOrderTraverse(n->left);
+    cout << n->data;
+    inOrderTraverse(n->right);
+  }
+
+  //determines number of nodes in a tree that starts from a given TreeNode
+  int countSubNodes(TreeNode* n) {
+    if (n == NULL)
+      return 0;
+    return countSubNodes(n->left) + countSubNodes(n->right) + 1;
+  }
+  //determines number of NULLs in a tree that starts from a given TreeNode
+  int countSubNulls(TreeNode* n) {
+    if (n == NULL)
+      return 1;
+    return countSubNulls(n->left) + countSubNulls(n->right);
+  }
+
+  // sums up the depth of each node in the tree and return the final summation
+  int sumOfDepths(TreeNode* n, int parentDepth) {
+    if (n == NULL)
+      return 0;
+    int myDepth = parentDepth + 1;
+    return myDepth + sumOfDepths(n->left, myDepth) + sumOfDepths(n->right, myDepth);
+  }
+  // determines the average number of steps taken by the search method to find a node
+  float foundAverageSearches() {
+    return (float)sumOfDepths(root, 0) / countSubNodes(root);
+  }
+
+  // sums up the depth of each NULL in the tree and return the final summation
+  int sumOfDepthsNotFound(TreeNode* n, int parentDepth) {
+    int myDepth = parentDepth + 1;
+    if (n == NULL)
+      return myDepth;
+    return sumOfDepthsNotFound(n->left, myDepth) + sumOfDepthsNotFound(n->right, myDepth);
+  }
+  //determines the average number of steps taken by search method when searching a non-existing node
+  float notFoundAverageSearches() {
+    return (float)sumOfDepthsNotFound(root, 0) / countSubNulls(root);
+  }
 };
 
-int main() {
 
+// testing foundAverageSearches() and notFoundAverageSearches() methods
+void testAverageSearches() {
+  BinaryTree t;
+  t.insert(10);
+  t.insert(5);
+  t.insert(3);
+  t.insert(4);
+  t.insert(6);
+  t.insert(7);
+  t.insert(8);
+  t.insert(20);
+  t.insert(15);
+  t.insert(13);
+  t.insert(18);
+  t.insert(21);
+
+  cout << "average searches needed (case found): " << t.foundAverageSearches() << endl;
+  cout << "average searches needed (case not found): " << t.notFoundAverageSearches() << endl;
+}
+
+// testing remove() method
+void testRemove() {
   //testing remove()
   /*
   example tree structure
@@ -349,37 +422,12 @@ int main() {
   t6.remove(5);
   t6.print();
   cout << endl;
+}
 
-  ////testing search
-  ////making tree
-  //TreeNode n1(5);
-  //TreeNode n2(3);
-  //TreeNode n3(6);
-  //n1.setLeft(&n2);
-  //n1.setRight(&n3);
+int main() {
 
-  //TreeNode n4(2);
-  //TreeNode n5(4);
-  //n2.setLeft(&n4);
-  //n2.setRight(&n5);
-
-  //BinaryTree t(&n1);
-  //
-  ////testing finding the root
-  //TreeNode* p = t.search(5);
-  //cout << p->getData() << endl;
-  ////testing finding left child of root
-  //p = t.search(3);
-  //cout << p->getData() << endl;
-  ////testing finding last child
-  //p = t.search(4);
-  //cout << p->getData() << endl;
-  ////testing finding right child of root
-  //p = t.search(6);
-  //cout << p->getData() << endl;
-  ////testing finding an element not in the tree
-  //p = t.search(9);
-  //cout << (p == NULL);
+  testRemove();
 
   return 0;
 }
+
