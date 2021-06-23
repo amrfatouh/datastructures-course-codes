@@ -312,6 +312,23 @@ public:
   float notFoundAverageSearches() {
     return (float)sumOfDepthsNotFound(root, 0) / countSubNulls(root);
   }
+	
+	// determines the height of a tree given its root and a height to increment from
+  int heightOfSubTree(TreeNode* n, int parentHeight) {
+    if (n == NULL) return parentHeight;
+    int myHeight = parentHeight + 1;
+    return max(heightOfSubTree(n->left, myHeight), heightOfSubTree(n->right, myHeight));
+  }
+
+  // determines whether a tree is balanced or not given its root and the height of the root parent 
+  bool isSubTreeBalanced(TreeNode* n, int parentHeight) {
+    if (n == NULL) return true;
+    int myHeight = parentHeight + 1;
+    int leftHeight = heightOfSubTree(n->left, myHeight);
+    int rightHeight = heightOfSubTree(n->right, myHeight);
+    if (abs(leftHeight - rightHeight) > 1) return false;
+    return isSubTreeBalanced(n->left, myHeight) && isSubTreeBalanced(n->right, myHeight);
+  }
 };
 
 
@@ -422,6 +439,33 @@ void testRemove() {
   t6.remove(5);
   t6.print();
   cout << endl;
+}
+
+void testHeightOfSubTree() {
+  BinaryTree t;
+  t.insert(15);
+  t.insert(8);
+  t.insert(20);
+  t.insert(2);
+  t.insert(11);
+  t.insert(27);
+
+  cout << "height of root: " << t.heightOfSubTree(t.getRoot(), 0) << endl;
+  cout << "height of root left node: " << t.heightOfSubTree(t.getRoot()->getLeft(), 1) << endl;
+  cout << "height of root right node: " << t.heightOfSubTree(t.getRoot()->getRight(), 1) << endl;
+}
+
+void testIsSubTreeBalanced() {
+  BinaryTree t;
+  t.insert(15);
+  t.insert(8);
+  t.insert(20);
+  t.insert(2);
+  t.insert(11);
+  cout << t.isSubTreeBalanced(t.getRoot(), 0) << endl;
+
+  t.insert(6);
+  cout << t.isSubTreeBalanced(t.getRoot(), 0) << endl;
 }
 
 int main() {
