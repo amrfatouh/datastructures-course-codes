@@ -65,7 +65,7 @@ string infixToPostfix(string infix) {
       case '-':
       case '(':
       case '*':
-      case'/':
+      case '/':
         s.push(infix[i]);
         break;
 
@@ -116,7 +116,7 @@ string infixToPostfix(string infix) {
 
       case '-':
       case '*':
-      case'/':
+      case '/':
       case '^':
         while (!s.empty() && s.top() != '(') {
           postfix += s.top();
@@ -140,7 +140,7 @@ string infixToPostfix(string infix) {
 
       case '-':
       case '*':
-      case'/':
+      case '/':
       case '^':
         while (!s.empty() && s.top() != '(') {
           postfix += s.top();
